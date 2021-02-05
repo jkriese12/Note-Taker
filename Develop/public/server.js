@@ -4,9 +4,6 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 
-const dbDir = path.resolve(__dirname, "db");
-const dbPath = path.join(dbDir, "db.json");
-
 // Sets up the Express App
 // =============================================================
 const app = express();
@@ -18,12 +15,9 @@ app.use(express.json());
 
 // Read and write function
 // =============================================================
-const writeDb = (data) => {
-  fs.appendFile(dbPath, data, (err) =>
-    err ? console.error(err) : console.log("File written")
-  );
-};
-
+const readJSON = fs.readFileSync("db.json");
+const JSONdata = JSON.parse(readJSON);
+console.log(JSONdata);
 // Routes
 // =============================================================
 app.get("/", function (req, res) {
@@ -35,7 +29,7 @@ app.get("/notes", function (req, res) {
 });
 
 app.get("/api/notes", function (req, res) {
-  fs.readFile(dbPath, (err) => (err ? console.error(err) : console.log("File written")));
+  res.json(JSONdata);
 });
 
 // Posts
