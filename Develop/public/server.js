@@ -3,7 +3,8 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-
+const db = require("./db.json");
+const dbPath = path.join(__dirname, "db.json");
 // Sets up the Express App
 // =============================================================
 const app = express();
@@ -17,7 +18,7 @@ app.use(express.json());
 // =============================================================
 const readJSON = fs.readFileSync("db.json");
 const JSONdata = JSON.parse(readJSON);
-console.log(JSONdata);
+
 // Routes
 // =============================================================
 app.get("/", function (req, res) {
@@ -34,9 +35,14 @@ app.get("/api/notes", function (req, res) {
 
 // Posts
 // =============================================================
-app.post("api/notes", function (req, res) {
+app.post("/api/notes", function (req, res) {
   var newNote = req.body;
-  writeDb(newNote);
+  // db.push(newNote);
+  fs.appendFile("db.json", JSON.stringify(newNote), (err) => {
+    if (err) throw err;
+    console.log("sent!");
+  });
+  res.send(newNote);
 });
 // Starts the server to begin listening
 // =============================================================
