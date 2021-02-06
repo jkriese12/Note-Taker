@@ -2,14 +2,14 @@
 // =============================================================
 const express = require("express");
 const fs = require("fs");
-const { request } = require("http");
 const path = require("path");
-const db = require("./db.json");
-const dbPath = path.join(__dirname, "db.json");
+const db = require("./db/db.json");
+const dbPath = path.join(__dirname, "./db/db.json");
 // Sets up the Express App
 // =============================================================
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3001;
+app.use(express.static("public"));
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -25,11 +25,11 @@ function readFile() {
 // Routes
 // =============================================================
 app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
 app.get("/notes", function (req, res) {
-  res.sendFile(path.join(__dirname, "notes.html"));
+  res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
 app.get("/api/notes", function (req, res) {
@@ -45,8 +45,8 @@ app.post("/api/notes", function (req, res) {
   read.push(newNote);
   fs.writeFileSync(dbPath, JSON.stringify(read), (err) => {
     if (err) throw err;
-    res.json(newNote);
   });
+  res.send(newNote);
 });
 // Starts the server to begin listening
 // =============================================================
