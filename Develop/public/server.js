@@ -2,6 +2,7 @@
 // =============================================================
 const express = require("express");
 const fs = require("fs");
+const { request } = require("http");
 const path = require("path");
 const db = require("./db.json");
 const dbPath = path.join(__dirname, "db.json");
@@ -14,10 +15,12 @@ const PORT = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Read and write function
+// Read function to get JSON data from db file
 // =============================================================
-const readJSON = fs.readFileSync("db.json");
-const JSONdata = JSON.parse(readJSON);
+function readFile() {
+  const readJSON = fs.readFileSync(dbPath, "utf-8");
+  return JSON.parse(readJSON);
+}
 
 // Routes
 // =============================================================
@@ -30,19 +33,20 @@ app.get("/notes", function (req, res) {
 });
 
 app.get("/api/notes", function (req, res) {
-  res.json(JSONdata);
+  let read = readFile();
+  res.json(read);
 });
 
 // Posts
 // =============================================================
 app.post("/api/notes", function (req, res) {
-  var newNote = req.body;
-  // db.push(newNote);
-  fs.appendFile("db.json", JSON.stringify(newNote), (err) => {
+  let newNote = req.body;
+  let read = readFile();
+  read.push(newNote);
+  fs.writeFileSync(dbPath, JSON.stringify(read), (err) => {
     if (err) throw err;
-    console.log("sent!");
+    res.json(newNote);
   });
-  res.send(newNote);
 });
 // Starts the server to begin listening
 // =============================================================
