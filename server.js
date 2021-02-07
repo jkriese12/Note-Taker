@@ -1,17 +1,17 @@
 // Dependencies/ Directory
 // =============================================================
-const { notStrictEqual } = require("assert");
+
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const uniqid = require("uniqid");
-const db = require("./db/db.json");
-const dbPath = path.join(__dirname, "./db/db.json");
+const db = require("./Develop/db/db.json");
+const dbPath = path.join(__dirname, "./Develop/db/db.json");
 // Sets up the Express App
 // =============================================================
 const app = express();
 const PORT = process.env.PORT || 3001;
-app.use(express.static("public"));
+app.use(express.static("./Develop/public"));
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -29,11 +29,11 @@ var parseJSON = JSON.parse(getJSON);
 // Routes
 // =============================================================
 app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "./public/index.html"));
+  res.sendFile(path.join(__dirname, "./Develop/public/index.html"));
 });
 
 app.get("/notes", function (req, res) {
-  res.sendFile(path.join(__dirname, "./public/notes.html"));
+  res.sendFile(path.join(__dirname, "./Develop/public/notes.html"));
 });
 
 app.get("/api/notes", function (req, res) {
