@@ -1,8 +1,10 @@
 // Dependencies/ Directory
 // =============================================================
+const { text } = require("express");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const uniqid = require("uniqid");
 const db = require("./db/db.json");
 const dbPath = path.join(__dirname, "./db/db.json");
 // Sets up the Express App
@@ -40,9 +42,14 @@ app.get("/api/notes", function (req, res) {
 // Posts
 // =============================================================
 app.post("/api/notes", function (req, res) {
-  let newNote = req.body;
+  let newNote = {
+    title: req.body.title,
+    text: req.body.text,
+    id: uniqid(),
+  };
   let read = readFile();
   read.push(newNote);
+
   fs.writeFileSync(dbPath, JSON.stringify(read), (err) => {
     if (err) throw err;
   });
