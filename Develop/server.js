@@ -1,6 +1,6 @@
 // Dependencies/ Directory
 // =============================================================
-const { text } = require("express");
+const { notStrictEqual } = require("assert");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
@@ -20,9 +20,11 @@ app.use(express.json());
 // Read function to get JSON data from db file
 // =============================================================
 function readFile() {
-  const readJSON = fs.readFileSync(dbPath, "utf-8");
+  const readJSON = fs.readFileSync(dbPath);
   return JSON.parse(readJSON);
 }
+const getJSON = fs.readFileSync(dbPath);
+var parseJSON = JSON.parse(getJSON);
 
 // Routes
 // =============================================================
@@ -55,6 +57,10 @@ app.post("/api/notes", function (req, res) {
   });
   res.send(newNote);
 });
+// Deleting a note
+// =============================================================
+app.delete("/api/notes:id"), function (req, res) {};
+
 // Starts the server to begin listening
 // =============================================================
 app.listen(PORT, function () {
